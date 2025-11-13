@@ -1,23 +1,23 @@
-import json
-
-from pydantic import BaseModel
-from fastapi import FastAPI, HTTPException
 import uvicorn
-from ciphers.caesar import encript_caesar, decript_caesar
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+
+from ciphers.caesar import encrypt_caesar, decrypt_caesar
+from ciphers.rail_fence import fence_encrypt, fence_decrypt
 
 
-class Cipher(BaseModel):
+class CipherCaesar(BaseModel):
     text: str
     offset: int
     mode: str
 
 
+class CipherFence(BaseModel):
+    text: str
+
+
 app = FastAPI()
 
-
-# def read_json(file):
-#     with open (file, "r") as f:
-#         json.load(f)
 
 @app.get("/test")
 def test():
@@ -26,20 +26,31 @@ def test():
 
 @app.get("/test/{name}")
 def test(name):
-    return {"msg": f"user :{name}"}
+    return {"msg": "saved user"}
 
 
 @app.post("/caesar")
-def encript(body: Cipher):
+def caesar(body: CipherCaesar):
     offset = body.offset
-    if body.mode == "encript":
-        return encript_caesar(body.text, offset)
-    elif body.mode == "decript":
-        return decript_caesar(body.text, offset)
+    if body.mode == "encrypt":
+        encrypt = encrypt_caesar(body.text, offset)
+        return {"encript_text": f"{encrypt} "}
 
-    raise HTTPException(status_code=404, detail= "not found")
+    elif body.mode == "decrypt":
+        decrypt = decrypt_caesar(body.text, offset)
+        return {"encript_text": f"{decrypt} "}
+
+    raise HTTPException(status_code=404, detail="not found")
 
 
+@app.get("/fence/encrypt")
+def encrypt_fence(txt):
+    return {"encrypt_text": f"{fence_encrypt(txt)}"}
+
+
+@app.post("/fence/decrypt")
+def decrypt_fence(txt: CipherFence):
+    return {"decrypt_text": f"{fence_decrypt(txt.text)}"}
 
 
 if __name__ == "__main__":

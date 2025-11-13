@@ -1,24 +1,25 @@
-def encript_caesar(txt,offset):
-    encript = ""
+def encrypt_caesar(txt, offset):
+    encrypt = ""
     for i in txt:
         if not i.isspace():
-            if ord(i) + offset <= 122 :
-                encript += chr(ord(i) + offset)
+            if ord(i) + offset <= 122:
+                encrypt += chr(ord(i) + offset)
             else:
-                encript += chr(ord(i)+offset - 26)
+                encrypt += chr(ord(i) + offset - 26)
         if i.isspace():
-            encript+= i
-    return encript
+            encrypt += i
 
-def decript_caesar(txt, offset):
-    encript = ""
+    return encrypt
+
+
+def decrypt_caesar(txt, offset):
+    decrypt = ""
     for i in txt:
         if not i.isspace():
             if ord(i) - offset >= 97:
-                encript += chr(ord(i) - offset)
+                decrypt += chr(ord(i) - offset)
             else:
-                encript += chr(ord(i) - offset + 26)
+                decrypt += chr(ord(i) - offset + 26)
         if i.isspace():
-            encript += i
-    return encript
-
+            decrypt += i
+    return decrypt
